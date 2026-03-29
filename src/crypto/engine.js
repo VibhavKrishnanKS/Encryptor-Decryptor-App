@@ -31,7 +31,7 @@ async function deriveKey(password, salt) {
       name: 'PBKDF2',
       salt: salt,
       iterations: PBKDF2_ITERATIONS,
-      hash: 'SHA-512',
+      hash: 'SHA-256',
     },
     importedKey,
     { name: 'AES-GCM', length: 256 },

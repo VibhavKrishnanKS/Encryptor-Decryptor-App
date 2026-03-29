@@ -119,12 +119,11 @@ export default function App() {
   if (!BROWSER_SUPPORTED) {
     return (
       <div className="app-wrapper">
-        <div className="bg-mesh" />
-        <div className="container" style={{ textAlign: 'center', paddingTop: '6rem' }}>
+        <div className="container" style={{ textAlign: 'center', paddingTop: '4rem' }}>
           <div className="alert-banner danger" style={{ justifyContent: 'center', flexDirection: 'column', gap: '0.5rem' }}>
             <AlertTriangle size={32} />
             <strong>Secure Context Required</strong>
-            <p>Your browser does not support the Web Crypto API required for AES-256-GCM encryption. Please use an up-to-date browser (Chrome 60+, Firefox 55+, Safari 11+, Edge 79+) and ensure you are on HTTPS.</p>
+            <p>Your browser lacks support for the Web Crypto API, or you are not on a secure HTTPS connection. This app requires modern browsers and a secure context to run locally.</p>
           </div>
         </div>
       </div>
@@ -134,7 +133,7 @@ export default function App() {
   return (
     <>
       <InactivityGuard onTimeout={handleTimeout} />
-      <div className="bg-mesh" />
+      <div className="elegant-bg-mesh" />
 
       <div className="app-wrapper">
         <div className="container">
@@ -142,7 +141,7 @@ export default function App() {
           <header className="header">
             <div className="logo-lockup">
               <div className="logo-icon">
-                <ShieldCheck size={26} color="#fff" />
+                <ShieldCheck size={28} />
               </div>
               <h1>SecureVault</h1>
             </div>
@@ -183,10 +182,10 @@ export default function App() {
             <motion.div
               key={mode}
               className="vault-card"
-              initial={{ opacity: 0, scale: 0.95, y: 30 }}
+              initial={{ opacity: 0, scale: 0.98, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 1.05, y: -20 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 20, mass: 0.8 }}
+              exit={{ opacity: 0, scale: 1.02, y: -10 }}
+              transition={{ duration: 0.35, ease: [0.25, 1, 0.5, 1] }}
             >
               {/* Input Text */}
               <div className="field-gap">
@@ -306,30 +305,27 @@ export default function App() {
             style={{ zIndex: 10000 }}
           >
             <div className="inactivity-card">
-              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1rem' }}>
-                <div className="logo-icon" style={{ width: 56, height: 56, background: 'rgba(255,23,68,0.1)', borderColor: 'rgba(255,23,68,0.2)' }}>
-                  <AlertTriangle size={26} color="#FF1744" />
-                </div>
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.25rem', color: '#ef4444' }}>
+                <AlertTriangle size={36} />
               </div>
-              <h2 style={{ fontSize: '1.25rem', marginBottom: '0.5rem', color: '#fff' }}>Erase Current Work?</h2>
-              <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '1.5rem', lineHeight: 1.6 }}>
-                Have you securely copied and stored your encrypted/decrypted output? <br/><br/>
-                Switching modes will <strong>immediately erase</strong> all current text, passwords, and results from your screen for security.
+              <h2>Erase Current Work?</h2>
+              <p>
+                Have you securely copied and stored your output? <br/><br/>
+                Switching modes will <strong>immediately erase</strong> your current password and data for security.
               </p>
-              <div style={{ display: 'flex', gap: '1rem' }}>
+              <div style={{ display: 'flex', gap: '1rem', flexDirection: 'column' }}>
                 <button
-                  className="icon-btn"
-                  style={{ flex: 1, padding: '0.875rem', justifyContent: 'center' }}
-                  onClick={() => setPendingMode(null)}
-                >
-                  Cancel
-                </button>
-                <button
-                  className="action-btn"
-                  style={{ flex: 1, direction: 'ltr', background: '#FF1744', color: '#fff', boxShadow: '0 4px 15px rgba(255,23,68,0.3)', padding: '0.875rem' }}
+                  className="action-btn danger-btn"
                   onClick={executeSwitch}
                 >
                   Yes, Erase & Switch
+                </button>
+                <button
+                  className="action-btn"
+                  style={{ background: 'transparent', border: '1px solid var(--border-subtle)', color: 'var(--text-primary)', boxShadow: 'none' }}
+                  onClick={() => setPendingMode(null)}
+                >
+                  Cancel
                 </button>
               </div>
             </div>

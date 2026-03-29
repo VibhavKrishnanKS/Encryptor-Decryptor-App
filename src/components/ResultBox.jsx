@@ -9,21 +9,40 @@ export default function ResultBox({ result, isEncrypted, onClear }) {
 
   const handleCopy = useCallback(async () => {
     try {
-      await navigator.clipboard.writeText(result);
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(result);
+      } else {
+        // Fallback for older browsers or non-secure contexts
+        const textArea = document.createElement('textarea');
+        textArea.value = result;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-999999px';
+        textArea.style.top = '-999999px';
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+          document.execCommand('copy');
+        } catch (err) {
+          throw new Error('Fallback copy failed');
+        } finally {
+          textArea.remove();
+        }
+      }
+
       setCopied(true);
-      // Auto-clear clipboard after 60 seconds
       setTimeout(async () => {
         try {
-          const text = await navigator.clipboard.readText();
-          if (text === result) {
-            await navigator.clipboard.writeText('');
+          if (navigator.clipboard) {
+            const text = await navigator.clipboard.readText();
+            if (text === result) await navigator.clipboard.writeText('');
           }
-        } catch { /* ignore if clipboard changed */ }
+        } catch { /* ignore */ }
       }, CLIPBOARD_CLEAR_DELAY);
 
       setTimeout(() => setCopied(false), 2200);
     } catch {
-      alert('Clipboard access denied. Please copy manually.');
+      alert('Clipboard access denied or unsupported. Please select and copy the text manually.');
     }
   }, [result]);
 
@@ -44,10 +63,10 @@ export default function ResultBox({ result, isEncrypted, onClear }) {
       {result && (
         <motion.div
           className="result-wrapper"
-          initial={{ opacity: 0, scale: 0.9, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: -20 }}
-          transition={{ type: 'spring', stiffness: 400, damping: 25, mass: 0.8 }}
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.35, ease: [0.25, 1, 0.5, 1] }}
         >
           <div className="result-header">
             <span className="field-label" style={{ marginBottom: 0 }}>
