@@ -106,7 +106,8 @@ export default function App() {
       } else if (err.code === 'CORRUPTED') {
         setError('Data corrupted: The encrypted data appears to be incomplete or has been modified.');
       } else {
-        setError(err.message || 'An unexpected error occurred.');
+        // Advanced Mobile Debug Engine -> Prints direct phone JS errors onto the screen
+        setError(`[DEBUG LOG] Message: ${err.message || 'Unknown Error'} | Details: ${err.name} | Stack: ${err.stack?.substring(0, 150) || 'No stack'}`);
       }
     } finally {
       setLoading(false);
