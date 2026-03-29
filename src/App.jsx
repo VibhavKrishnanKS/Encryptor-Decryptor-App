@@ -1,6 +1,6 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Lock, Unlock, ShieldCheck, AlertTriangle, Info, Zap } from 'lucide-react';
+import { Lock, Unlock, ShieldCheck, AlertTriangle, Info, Zap, FileUp } from 'lucide-react';
 import PasswordField from './components/PasswordField';
 import ResultBox from './components/ResultBox';
 import InactivityGuard from './components/InactivityGuard';
@@ -17,6 +17,29 @@ export default function App() {
   const [error, setError]         = useState(null);
   const [warn, setWarn]           = useState(null);
   const [pendingMode, setPendingMode] = useState(null);
+  const fileInputRef              = useRef(null);
+
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Check size limit (e.g., 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setError('File is too large. Maximum size is 5MB.');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setInputText(event.target.result);
+      setError(null);
+    };
+    reader.onerror = () => {
+      setError('Failed to read the imported file.');
+    };
+    reader.readAsText(file);
+    e.target.value = ''; // Reset input so same file can be imported again if needed
+  };
 
   // Clear sensitive output on inactivity timeout
   const handleTimeout = useCallback(() => {
@@ -190,9 +213,25 @@ export default function App() {
             >
               {/* Input Text */}
               <div className="field-gap">
-                <label className="field-label" htmlFor="input-text">
-                  {mode === 'encrypt' ? '📝 Plaintext to Encrypt' : '🔐 Encrypted Blob to Decrypt'}
-                </label>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.6rem' }}>
+                  <label className="field-label" htmlFor="input-text" style={{ marginBottom: 0 }}>
+                    {mode === 'encrypt' ? '📝 Plaintext to Encrypt' : '🔐 Encrypted Blob to Decrypt'}
+                  </label>
+                  <button 
+                    className="icon-btn" 
+                    onClick={() => fileInputRef.current?.click()}
+                    title="Import text from a file"
+                  >
+                    <FileUp size={14} /> Import File
+                  </button>
+                  <input 
+                    type="file" 
+                    ref={fileInputRef} 
+                    onChange={handleFileUpload} 
+                    accept=".txt,.md,.csv,.json" 
+                    style={{ display: 'none' }} 
+                  />
+                </div>
                 <textarea
                   id="input-text"
                   className={`vault-textarea ${error ? 'danger' : ''}`}
