@@ -6,7 +6,7 @@
  * The AuthTag (16 bytes) is appended at the end by WebCrypto automatically.
  */
 
-const PBKDF2_ITERATIONS = 600_000;
+const PBKDF2_ITERATIONS = 210_000; // Lowered for safe mobile execution without browser crash
 const SALT_BYTES = 16;
 const IV_BYTES = 12;
 const SECUREVAULT_HEADER = 'SVLT1:'; // Magic prefix to detect SecureVault blobs
@@ -51,10 +51,15 @@ function bufferToBase64(buffer) {
 }
 
 /**
- * Converts a Base64 string to an ArrayBuffer.
+ * Converts a Base64 string to an ArrayBuffer, specifically stripping any
+ * invalid invisible characters safely before passing to strict atob()
  */
 function base64ToBuffer(base64) {
-  const binary = atob(base64);
+  // CRITICAL FIX: Strip all invisible whitespace, newlines, and smart-quotes 
+  // added by messaging apps when copy-pasting code between phones.
+  const sanitized = base64.replace(/[^A-Za-z0-9+/=]/g, '');
+  
+  const binary = atob(sanitized);
   const bytes = new Uint8Array(binary.length);
   for (let i = 0; i < binary.length; i++) {
     bytes[i] = binary.charCodeAt(i);

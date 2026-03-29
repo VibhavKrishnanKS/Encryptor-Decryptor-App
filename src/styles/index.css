@@ -210,7 +210,7 @@ body {
 }
 
 .vault-textarea {
-  min-height: clamp(120px, 20vh, 180px);
+  min-height: clamp(200px, 35vh, 450px);
   font-family: var(--font-mono); font-size: 0.9rem; padding: 1.25rem; resize: vertical; line-height: 1.7;
 }
 
@@ -320,7 +320,7 @@ body {
 .result-box {
   background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius-lg);
   padding: 1.25rem; font-family: var(--font-mono); font-size: 0.9rem; color: var(--text-mono);
-  word-break: break-all; line-height: 1.7; max-height: 30vh; overflow-y: auto; white-space: pre-wrap;
+  word-break: break-all; line-height: 1.7; max-height: 55vh; overflow-y: auto; white-space: pre-wrap;
   box-shadow: inset 0 4px 10px rgba(0,0,0,0.2);
 }
 
@@ -352,7 +352,7 @@ body {
   .vault-card { padding: 1.25rem; border-radius: var(--radius-lg); }
   .action-btn { padding: 1rem; font-size: 1rem; }
   .password-input { padding: 0.85rem 2.5rem 0.85rem 1rem; font-size: 0.95rem; }
-  .vault-textarea { padding: 1rem; font-size: 0.85rem; min-height: 90px; }
+  .vault-textarea { padding: 1rem; font-size: 0.85rem; min-height: 180px; }
   .strength-bar-wrapper { flex-direction: row; align-items: center; gap: 0.5rem; }
   .strength-label { text-align: right; min-width: 60px; font-size: 0.7rem; }
   .result-actions { width: 100%; display: grid; grid-template-columns: 1fr 1fr; }
