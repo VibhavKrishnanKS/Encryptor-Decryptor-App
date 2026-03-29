@@ -71,7 +71,7 @@ function base64ToBuffer(base64) {
  * Detects if a string is a SecureVault encrypted blob.
  */
 export function isSecureVaultBlob(text) {
-  return typeof text === 'string' && text.trimStart().startsWith(SECUREVAULT_HEADER);
+  return typeof text === 'string' && text.trimStart().toLowerCase().startsWith(SECUREVAULT_HEADER.toLowerCase());
 }
 
 /**
@@ -115,7 +115,7 @@ export async function decryptData(vaultBlob, password) {
 
   const trimmed = vaultBlob.trim();
 
-  if (!trimmed.startsWith(SECUREVAULT_HEADER)) {
+  if (!trimmed.toLowerCase().startsWith(SECUREVAULT_HEADER.toLowerCase())) {
     const err = new Error('This does not appear to be a SecureVault encrypted file. Invalid format.');
     err.code = 'INVALID_FORMAT';
     throw err;
